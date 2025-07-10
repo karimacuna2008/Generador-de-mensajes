@@ -7,8 +7,6 @@ st.title("🖋️ Generador de Prompt Dinámico")
 
 # ————— Cliente OpenAI —————
 MODEL_NAME = "gpt-4.1-mini"
-
-# Lee la API key que configuraste en Streamlit Share
 api_key = st.secrets["OPENAI_API_KEY"]
 client  = OpenAI(api_key=api_key)
 
@@ -31,13 +29,14 @@ with st.sidebar:
 
 # ————— Campos de contenido del mensaje —————
 st.subheader("✏️ Contenido del mensaje")
-motivo      = st.text_area("Motivo del mensaje", placeholder="Describe brevemente el motivo...")
-acciones    = st.text_area("Acciones en curso", placeholder="¿Qué se está haciendo para resolverlo?")
-solucion    = st.text_area("Solución / Próximos pasos", placeholder="¿Qué solución o pasos sigue?")
-guia        = st.text_input("Número de guía (opcional)")
-datos_extra = st.text_input("Datos extra (opcional)")
+motivo       = st.text_area("Motivo del mensaje", placeholder="Describe brevemente el motivo...")
+acciones     = st.text_area("Acciones en curso", placeholder="¿Qué se está haciendo para resolverlo?")
+solucion     = st.text_area("Solución / Próximos pasos", placeholder="¿Qué solución o pasos sigue?")
+guia         = st.text_input("Número de guía (opcional)")
+paqueteria   = st.text_input("Paquetería (opcional)")
+datos_extra  = st.text_input("Datos extra (opcional)")
 
-# ————— Construye el prompt —————
+# ————— Generar el texto del prompt —————
 def build_prompt() -> str:
     p = (
         f"Eres un asistente que redacta mensajes al cliente en un tono formal y muy amable.\n"
@@ -47,9 +46,9 @@ def build_prompt() -> str:
         "1. Una breve explicación del motivo.\n"
         "2. Una descripción de las acciones en curso o lo que se está haciendo para resolver el problema.\n"
         "3. La solución que se aplicará o los próximos pasos a seguir.\n"
-        "4. Si se proporciona número de guía, menciona cuál es al final. No esta relacionado con el motivo del mensaje. Al final mencionarás cual es la nueva paqueteria y cual es la nueva guia.\n"
-        "5. Debes mencionar los datos extra, donde consideres que deba ir mejor en el texto.\n"
+        "4. Debes mencionar los datos extra, donde consideres que deba ir mejor en el texto.\n"
     )
+    # Lógica de la disculpa
     if incluir_disculpa == "Sí":
         if tipo_disculpa == "Error ajeno":
             apology = 'Al inicio incluye una disculpa corta, por ejemplo "Lamentamos los inconvenientes".'
@@ -62,17 +61,21 @@ def build_prompt() -> str:
     else:
         apology = "No incluyas ninguna disculpa."
     p += f"6. {apology}\n\n"
-    #p += (
-    #    "Será un mensaje por whatsapp o mensajería, así que será de corrido "
-    #    "y un poco menos formal que un correo.\nInicia con un saludo."
-    #)
+    # Mantener saludo inicial
+    p += "Inicia con un saludo."
+    # Nueva instrucción si hay guía + paquetería
+    if guia and paqueteria:
+        p += (
+            f"\n\nSi se incluye guia y paqueteria, indica que se realizó un reenvío con la paquetería indicada"
+            f"y su nueva guia. Al final."
+        )
     return p
 
 # ————— Mostrar el prompt generado —————
 if st.button("🔎 Ver Prompt generado"):
-    txt = build_prompt()
+    prompt_text = build_prompt()
     st.subheader("📝 Prompt final para la API")
-    st.code(txt, language="markdown")
+    st.code(prompt_text, language="markdown")
 
     st.subheader("📋 Contenido ingresado")
     st.markdown(
@@ -80,6 +83,7 @@ if st.button("🔎 Ver Prompt generado"):
         f"- **Acciones en curso:** {acciones or '_(vacío)_'}  \n"
         f"- **Solución / Próximos pasos:** {solucion or '_(vacío)_'}  \n"
         f"- **Número de guía:** {guia or 'N/A'}  \n"
+        f"- **Paquetería:** {paqueteria or 'N/A'}  \n"
         f"- **Datos extra:** {datos_extra or 'N/A'}"
     )
 
@@ -91,6 +95,7 @@ if st.button("📨 Generar mensaje con OpenAI"):
         f"Acciones: {acciones}\n"
         f"Solución: {solucion}\n"
         f"Número de guía: {guia or 'N/A'}\n"
+        f"Paquetería: {paqueteria or 'N/A'}\n"
         f"Datos extra: {datos_extra or 'N/A'}"
     )
     with st.spinner("Generando mensaje…"):
