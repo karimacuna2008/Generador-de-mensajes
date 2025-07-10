@@ -47,7 +47,7 @@ def build_prompt() -> str:
         "1. Una breve explicación del motivo.\n"
         "2. Una descripción de las acciones en curso o lo que se está haciendo para resolver el problema.\n"
         "3. La solución que se aplicará o los próximos pasos a seguir.\n"
-        "4. Si se proporciona número de guía, menciona cuál es. No es la que falló. Es la nueva guia y la paqueteria que a quien pertenece.\n"
+        "4. Si se proporciona número de guía, menciona cuál es. No es la que falló asi que no lo relaciones con el motivo del mensaje ni nada parecido. Es la nueva guia y la paqueteria que a quien pertenece.\n"
         "5. Debes mencionar los datos extra, donde consideres que deba ir mejor en el texto.\n"
     )
     if incluir_disculpa == "Sí":
