@@ -15,7 +15,6 @@ client  = OpenAI(api_key=api_key)
 # ————— Parámetros en la barra lateral —————
 with st.sidebar:
     st.header("⚙️ Configuración del Prompt")
-    st.write("Api", api_key)
     tipo_mensaje     = st.radio("Tipo de mensaje", ["Correo", "Mensaje de Whatsapp/Mensajería instantánea"])
     incluir_disculpa = st.radio("¿Incluir disculpa?", ["Sí", "No"])
     tipo_disculpa    = None
@@ -32,6 +31,7 @@ with st.sidebar:
 
 # ————— Campos de contenido del mensaje —————
 st.subheader("✏️ Contenido del mensaje")
+st.write(f"Api {api_key}")
 motivo      = st.text_area("Motivo del mensaje", placeholder="Describe brevemente el motivo...")
 acciones    = st.text_area("Acciones en curso", placeholder="¿Qué se está haciendo para resolverlo?")
 solucion    = st.text_area("Solución / Próximos pasos", placeholder="¿Qué solución o pasos sigue?")
