@@ -29,12 +29,19 @@ with st.sidebar:
 
 # ————— Campos de contenido del mensaje —————
 st.subheader("✏️ Contenido del mensaje")
-motivo       = st.text_area("Motivo del mensaje", placeholder="Describe brevemente el motivo...")
-acciones     = st.text_area("Acciones en curso", placeholder="¿Qué se está haciendo para resolverlo?")
-solucion     = st.text_area("Solución / Próximos pasos", placeholder="¿Qué solución o pasos sigue?")
-guia         = st.text_input("Número de guía (opcional)")
-paqueteria   = st.text_input("Paquetería (opcional)")
-datos_extra  = st.text_input("Datos extra (opcional)")
+
+motivo    = st.text_area("Motivo del mensaje", placeholder="Describe brevemente el motivo...")
+acciones  = st.text_area("Acciones en curso", placeholder="¿Qué se está haciendo para resolverlo?")
+solucion  = st.text_area("Solución / Próximos pasos", placeholder="¿Qué solución o pasos sigue?")
+
+# Aquí creamos dos columnas para guía y paquetería
+col1, col2 = st.columns(2)
+with col1:
+    guia = st.text_input("Número de guía (opcional)")
+with col2:
+    paqueteria = st.text_input("Paquetería (opcional)")
+
+datos_extra = st.text_input("Datos extra (opcional)")
 
 # ————— Generar el texto del prompt —————
 def build_prompt() -> str:
